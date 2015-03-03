@@ -23,8 +23,9 @@ TARGET_CPU_VARIANT := krait
 TARGET_USE_QCOM_BIONIC_OPTIMIZATION := true
 
 TARGET_NO_BOOTLOADER := true
+TARGET_PREBUILT_KERNEL := device/moto/shamu/kernel
+TARGET_KERNEL_SOURCE :=
 
-BOARD_KERNEL_IMAGE_NAME := zImage-dtb
 BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_PAGESIZE :=  2048
 BOARD_KERNEL_TAGS_OFFSET := 0x01E00000
@@ -174,7 +175,23 @@ DEVICE_RESOLUTION := 1440x2560
 TW_INCLUDE_L_CRYPTO := true
 BOARD_HAS_NO_REAL_SDCARD := true
 RECOVERY_GRAPHICS_USE_LINELENGTH := true
-TARGET_RECOVERY_PIXEL_FORMAT := "RBG_565"
+TARGET_RECOVERY_PIXEL_FORMAT := "RGB_565"
 TW_SCREEN_BLANK_ON_BOOT := true
+TW_BRIGHTNESS_PATH := "/sys/devices/fd900000.qcom\x2cmdss_mdp/qcom\x2cmdss_fb_primary.164/leds/lcd-backlight/brightness"
+
+# MultiROM config. MultiROM also uses parts of TWRP config
+MR_INPUT_TYPE := type_b
+MR_INIT_DEVICES := device/moto/shamu/multirom/mr_init_devices.c
+MR_DPI := xxhdpi
+MR_DPI_FONT := 435
+MR_FSTAB := device/moto/shamu/twrp.fstab
+MR_KEXEC_MEM_MIN := 0x20000000
+MR_KEXEC_DTB := true
+#MR_INFOS := device/moto/shamu/multirom/infos
+MR_DEVICE_HOOKS := device/moto/shamu/multirom/mr_hooks.c
+MR_DEVICE_HOOKS_VER := 3
+MR_PIXEL_FORMAT := "RGB_565"
+MR_ENCRYPTION := true
+MR_ENCRYPTION_SETUP_SCRIPT := device/moto/shamu/multirom/mr_cp_crypto.sh
 
 -include vendor/moto/shamu/BoardConfigVendor.mk

@@ -19,8 +19,24 @@
 #
 # Everything in this directory will become public
 
+
+ifeq ($(TARGET_PREBUILT_KERNEL),)
+LOCAL_KERNEL := device/moto/shamu/kernel
+else
+LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
+endif
+
+PRODUCT_COPY_FILES := \
+    $(LOCAL_KERNEL):kernel
+
 PRODUCT_COPY_FILES += \
-    device/moto/shamu/twrp.fstab:recovery/root/etc/twrp.fstab
+    device/moto/shamu/twrp.fstab:recovery/root/etc/twrp.fstab \
+    vendor/qcom/shamu/proprietary/keymaster.b00:recovery/root/vendor/firmware/keymaster/keymaster.b00 \
+    vendor/qcom/shamu/proprietary/keymaster.b01:recovery/root/vendor/firmware/keymaster/keymaster.b01 \
+    vendor/qcom/shamu/proprietary/keymaster.b02:recovery/root/vendor/firmware/keymaster/keymaster.b02 \
+    vendor/qcom/shamu/proprietary/keymaster.b03:recovery/root/vendor/firmware/keymaster/keymaster.b03 \
+    vendor/qcom/shamu/proprietary/keymaster.mdt:recovery/root/vendor/firmware/keymaster/keymaster.mdt \
+    vendor/qcom/shamu/proprietary/libQSEEComAPI.so:recovery/root/sbin/libQSEEComAPI.so
 
 PRODUCT_COPY_FILES += \
     device/moto/shamu/init.shamu.rc:root/init.shamu.rc \
