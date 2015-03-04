@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 #include <stdint.h>
 #include <time.h>
+#include <string.h>
 
 #include <log.h>
 
@@ -111,3 +112,50 @@ void tramp_hook_before_device_init(void)
     set_cpu_governor();
 }
 #endif /* MR_DEVICE_HOOKS >= 3 */
+
+#if MR_DEVICE_HOOKS >= 4
+int mrom_hook_allow_incomplete_fstab(void)
+{
+    return 0;
+}
+#endif
+
+#if MR_DEVICE_HOOKS >= 5
+
+static void replace_tag(char *cmdline, size_t cap, const char *tag, const char *what)
+{
+    char *start, *end;
+    char *str = cmdline;
+    char *str_end = str + strlen(str);
+    size_t replace_len = strlen(what);
+
+    while((start = strstr(str, tag)))
+    {
+        end = strstr(start, " ");
+        if(!end)
+            end = str_end;
+        else if(replace_len == 0)
+            ++end;
+
+        if(end != start)
+        {
+
+            size_t len = str_end - end;
+            if((start - cmdline)+replace_len+len > cap)
+                len = cap - replace_len - (start - cmdline);
+            memmove(start+replace_len, end, len+1); // with \0
+            memcpy(start, what, replace_len);
+        }
+
+        str = start+replace_len;
+    }
+}
+
+int mrom_hook_cmdline_remove_bootimg_part(char *bootimg_cmdline, size_t bootimg_cmdline_cap, char *complete_cmdline, size_t complete_cmdline_cap)
+{
+    // Shamu's bootloader replaces all occurences of console=... with console=null, because fuck you.
+    replace_tag(bootimg_cmdline, bootimg_cmdline_cap, "androidboot.console=", "");
+    replace_tag(bootimg_cmdline, bootimg_cmdline_cap, "console=", "console=null");
+    return 0;
+}
+#endif
