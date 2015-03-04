@@ -151,11 +151,10 @@ static void replace_tag(char *cmdline, size_t cap, const char *tag, const char *
     }
 }
 
-int mrom_hook_cmdline_remove_bootimg_part(char *bootimg_cmdline, size_t bootimg_cmdline_cap, char *complete_cmdline, size_t complete_cmdline_cap)
+void mrom_hook_fixup_bootimg_cmdline(char *bootimg_cmdline, size_t bootimg_cmdline_cap)
 {
     // Shamu's bootloader replaces all occurences of console=... with console=null, because fuck you.
     replace_tag(bootimg_cmdline, bootimg_cmdline_cap, "androidboot.console=", "");
     replace_tag(bootimg_cmdline, bootimg_cmdline_cap, "console=", "console=null");
-    return 0;
 }
 #endif
