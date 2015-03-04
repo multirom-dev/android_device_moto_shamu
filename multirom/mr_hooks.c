@@ -157,4 +157,20 @@ void mrom_hook_fixup_bootimg_cmdline(char *bootimg_cmdline, size_t bootimg_cmdli
     replace_tag(bootimg_cmdline, bootimg_cmdline_cap, "androidboot.console=", "");
     replace_tag(bootimg_cmdline, bootimg_cmdline_cap, "console=", "console=null");
 }
+
+int mrom_hook_has_kexec(void)
+{
+    // shamu kernels don't have /proc/config.gz, but they
+    // have CONFIG_PROC_DEVICETREE enabled by default, so check
+    // for /proc/device-tree/soc/kexec_hardboot-hole instead
+    // (the DTB node that reserves memory for kexec-hardboot page).
+
+    static const char *checkfile = "/proc/device-tree/soc/kexec_hardboot-hole";
+    if(access(checkfile, R_OK) < 0)
+    {
+        ERROR("%s was not found!\n", checkfile);
+        return 0;
+    }
+    return 1;
+}
 #endif
