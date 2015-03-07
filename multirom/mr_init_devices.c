@@ -14,10 +14,15 @@ const char *mr_init_devices[] =
     "/sys/devices/msm_sdcc.1/mmc_host/mmc0",
     "/sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001",
     "/sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0",
-    "/sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0*",
+    "/sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p37", // boot
+    "/sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p38", // cache
+    "/sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p1", // modem
+    "/sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p26", // persist
+    "/sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p41", // system
+    "/sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p42", // userdata
+    "/sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p2", // metadata
     "/sys/bus/mmc",
     "/sys/bus/mmc/drivers/mmcblk",
-    "/sys/bus/sdio/drivers/bcmsdh_sdmmc",
     "/sys/module/mmc_core",
     "/sys/module/mmcblk",
 
