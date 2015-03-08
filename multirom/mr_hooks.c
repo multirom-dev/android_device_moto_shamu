@@ -113,10 +113,32 @@ static void set_cpu_governor(void)
     write_file("/sys/module/cpu_boost/parameters/input_boost_ms", "40");
 }
 
+static void wait_for_mmc(void)
+{
+    static const char *filename = "/sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p42/uevent";
+    if(access(filename, R_OK) < 0)
+    {
+        INFO("Waiting for %s\n", filename);
+        if(wait_for_file(filename, 5) < 0)
+        {
+            ERROR("Waiting too long for dev %s\n", filename);
+            return;
+        }
+    }
+
+    // 64gb shamu has some kind of race condition in its kernel emmc drivers,
+    // if we start mounting things too soon, the commands will timeout.
+    // We can't really tell when were the drivers initialized, so just wait a flat 1.5s.
+    INFO("Sleeping for 1.5s to give emmc drivers some time to initialize...\n");
+    usleep(1500000);
+}
+
 void tramp_hook_before_device_init(void)
 {
     // shamu's kernel has "performance" as default
     set_cpu_governor();
+
+    wait_for_mmc();
 }
 #endif /* MR_DEVICE_HOOKS >= 3 */
 
