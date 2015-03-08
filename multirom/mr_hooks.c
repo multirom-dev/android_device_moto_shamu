@@ -12,6 +12,7 @@
 #include <string.h>
 
 #include <log.h>
+#include <util.h>
 
 #if MR_DEVICE_HOOKS >= 1
 int mrom_hook_after_android_mounts(const char *busybox_path, const char *base_path, int type)
@@ -35,23 +36,11 @@ void mrom_hook_before_fb_close(void)
 static int read_file(const char *path, char *dest, int dest_size)
 {
     int res = 0;
-    FILE *f = fopen(path, "r");
+    FILE *f = fopen(path, "re");
     if(!f)
         return res;
 
     res = fgets(dest, dest_size, f) != NULL;
-    fclose(f);
-    return res;
-}
-
-static int write_file(const char *path, const char *what)
-{
-    int res = 0;
-    FILE *f = fopen(path, "w");
-    if(!f)
-        return res;
-
-    res = fputs(what, f) >= 0;
     fclose(f);
     return res;
 }
@@ -88,22 +77,40 @@ static void set_cpu_governor(void)
         }
     }
 
-    write_file("/sys/devices/system/cpu/cpufreq/ondemand/up_threshold","90");
-    write_file("/sys/devices/system/cpu/cpufreq/ondemand/sampling_rate","50000");
-    write_file("/sys/devices/system/cpu/cpufreq/ondemand/io_is_busy","1");
-    write_file("/sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor","4");
-    write_file("/sys/devices/system/cpu/cpufreq/ondemand/down_differential","10");
-    write_file("/sys/devices/system/cpu/cpufreq/ondemand/up_threshold_multi_core","70");
-    write_file("/sys/devices/system/cpu/cpufreq/ondemand/down_differential_multi_core","3");
-    write_file("/sys/devices/system/cpu/cpufreq/ondemand/optimal_freq","960000");
-    write_file("/sys/devices/system/cpu/cpufreq/ondemand/sync_freq","960000");
-    write_file("/sys/devices/system/cpu/cpufreq/ondemand/up_threshold_any_cpu_load","80");
-    write_file("/sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq","300000");
-    write_file("/sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq","300000");
-    write_file("/sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq","300000");
-    write_file("/sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq","300000");
-
+    write_file("/sys/module/lpm_levels/enable_low_power/l2", "4");
+    write_file("/sys/module/msm_pm/modes/cpu0/power_collapse/suspend_enabled", "1");
+    write_file("/sys/module/msm_pm/modes/cpu1/power_collapse/suspend_enabled", "1");
+    write_file("/sys/module/msm_pm/modes/cpu2/power_collapse/suspend_enabled", "1");
+    write_file("/sys/module/msm_pm/modes/cpu3/power_collapse/suspend_enabled", "1");
+    write_file("/sys/module/msm_pm/modes/cpu0/power_collapse/idle_enabled", "1");
+    write_file("/sys/module/msm_pm/modes/cpu1/power_collapse/idle_enabled", "1");
+    write_file("/sys/module/msm_pm/modes/cpu2/power_collapse/idle_enabled", "1");
+    write_file("/sys/module/msm_pm/modes/cpu3/power_collapse/idle_enabled", "1");
+    write_file("/sys/module/msm_pm/modes/cpu0/standalone_power_collapse/suspend_enabled", "1");
+    write_file("/sys/module/msm_pm/modes/cpu1/standalone_power_collapse/suspend_enabled", "1");
+    write_file("/sys/module/msm_pm/modes/cpu2/standalone_power_collapse/suspend_enabled", "1");
+    write_file("/sys/module/msm_pm/modes/cpu3/standalone_power_collapse/suspend_enabled", "1");
+    write_file("/sys/module/msm_pm/modes/cpu0/standalone_power_collapse/idle_enabled", "1");
+    write_file("/sys/module/msm_pm/modes/cpu1/standalone_power_collapse/idle_enabled", "1");
+    write_file("/sys/module/msm_pm/modes/cpu2/standalone_power_collapse/idle_enabled", "1");
+    write_file("/sys/module/msm_pm/modes/cpu3/standalone_power_collapse/idle_enabled", "1");
+    write_file("/sys/module/msm_pm/modes/cpu0/retention/idle_enabled", "1");
+    write_file("/sys/module/msm_pm/modes/cpu1/retention/idle_enabled", "1");
+    write_file("/sys/module/msm_pm/modes/cpu2/retention/idle_enabled", "1");
+    write_file("/sys/module/msm_pm/modes/cpu3/retention/idle_enabled", "1");
     write_file("/sys/module/msm_thermal/core_control/enabled", "1");
+    write_file("/sys/devices/system/cpu/cpufreq/interactive/io_is_busy", "1");
+
+    write_file("/sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay", "20000 1400000:40000 1700000:20000");
+    write_file("/sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load", "90");
+    write_file("/sys/devices/system/cpu/cpufreq/interactive/hispeed_freq", "1497600");
+    write_file("/sys/devices/system/cpu/cpufreq/interactive/target_loads", "85 1500000:90 1800000:70");
+    write_file("/sys/devices/system/cpu/cpufreq/interactive/min_sample_time", "40000");
+    write_file("/sys/module/cpu_boost/parameters/boost_ms", "20");
+    write_file("/sys/module/cpu_boost/parameters/sync_threshold", "1728000");
+    write_file("/sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor", "100000");
+    write_file("/sys/module/cpu_boost/parameters/input_boost_freq", "1497600");
+    write_file("/sys/module/cpu_boost/parameters/input_boost_ms", "40");
 }
 
 void tramp_hook_before_device_init(void)
