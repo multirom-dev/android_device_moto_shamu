@@ -190,8 +190,12 @@ MR_KEXEC_DTB := true
 #MR_INFOS := device/moto/shamu/multirom/infos
 MR_DEVICE_HOOKS := device/moto/shamu/multirom/mr_hooks.c
 MR_DEVICE_HOOKS_VER := 5
-MR_PIXEL_FORMAT := "RGB_565"
+MR_PIXEL_FORMAT := "RGBX_8888"
 MR_ENCRYPTION := true
 MR_ENCRYPTION_SETUP_SCRIPT := device/moto/shamu/multirom/mr_cp_crypto.sh
+MR_USE_QCOM_OVERLAY := true
+MR_QCOM_OVERLAY_HEADER := device/moto/shamu/multirom/mr_qcom_overlay.h
+MR_QCOM_OVERLAY_CUSTOM_PIXEL_FORMAT := MDP_RGBX_8888
+MR_QCOM_OVERLAY_USE_VSYNC := true
 
 -include vendor/moto/shamu/BoardConfigVendor.mk
