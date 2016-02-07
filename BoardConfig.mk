@@ -196,5 +196,6 @@ MR_ENCRYPTION_SETUP_SCRIPT := device/moto/shamu/multirom/mr_cp_crypto.sh
 MR_USE_QCOM_OVERLAY := true
 MR_QCOM_OVERLAY_HEADER := device/moto/shamu/multirom/mr_qcom_overlay.h
 MR_QCOM_OVERLAY_CUSTOM_PIXEL_FORMAT := MDP_RGBX_8888
+TARGET_RECOVERY_IS_MULTIROM := true
 
 -include vendor/moto/shamu/BoardConfigVendor.mk
